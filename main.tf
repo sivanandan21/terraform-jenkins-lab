@@ -30,10 +30,6 @@ resource "aws_security_group" "web_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = {
-    Name = "Terraform-Jenkins-SG"
-  }
 }
 
 resource "aws_instance" "web" {
@@ -41,17 +37,18 @@ resource "aws_instance" "web" {
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.web_sg.id]
 
-  user_data = <<-EOF2
+  user_data = <<-USERDATA
     #!/bin/bash
-    apt-get update
+    apt-get update -y
     apt-get install -y nginx
     systemctl enable nginx
     systemctl start nginx
-    echo "Deployed using Terraform and Jenkins CI/CD" > /var/www/html/index.html
-  EOF2
+    echo "<h1>Final Mini Project - Jenkins Terraform CI/CD</h1><p>Infrastructure updated automatically from GitHub.</p>" > /var/www/html/index.html
+  USERDATA
 
   tags = {
     Name        = "Terraform-Jenkins-Web"
     Environment = "Training"
+    Project     = "Final-Mini-Project"
   }
 }
