@@ -28,7 +28,7 @@ pipeline {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'aws-credentials']]) {
-                    sh 'terraform init -input=false'
+                    sh 'terraform init -input=false -migrate-state -force-copy'
                 }
             }
         }
